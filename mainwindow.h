@@ -13,13 +13,14 @@ class MainWindow : public QMainWindow
 
 public:
     MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
+    ~MainWindow(){};
+    QNetworkAccessManager &getNetworkManager(){ return mNetworkManager; };
 
 private:
     void setupWidgets();
 
     Ui_MainWindow mMainWindowUi;
-    Weather mWeather;
     QNetworkAccessManager mNetworkManager;
+    Weather mWeather;
 };
 #endif // MAINWINDOW_H

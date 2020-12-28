@@ -10,13 +10,14 @@ MainWindow::MainWindow(QWidget *parent)
 
     mMainWindowUi.setupUi(this);
     setupWidgets();
-}
 
-MainWindow::~MainWindow()
-{
+    //TODO: add global start
 }
 
 void MainWindow::setupWidgets()
 {
     mWeather.setParent(mMainWindowUi.centralwidget);
+
+
+    mWeather.start();
 }
