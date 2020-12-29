@@ -1,8 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include <memory>
 #include <QMainWindow>
-#include <QNetworkAccessManager>
 
 #include "weather.h"
 #include "ui_main.h"
@@ -14,13 +14,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow(){};
-    QNetworkAccessManager &getNetworkManager(){ return mNetworkManager; };
 
 private:
     void setupWidgets();
 
-    Ui_MainWindow mMainWindowUi;
-    QNetworkAccessManager mNetworkManager;
-    Weather mWeather;
+    std::unique_ptr<Ui_MainWindow> ui;
+    std::unique_ptr<Weather> mWeather;
 };
 #endif // MAINWINDOW_H

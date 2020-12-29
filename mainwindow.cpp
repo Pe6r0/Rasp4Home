@@ -8,16 +8,15 @@ MainWindow::MainWindow(QWidget *parent)
     Qt::WindowFlags flags{Qt::Window | Qt::FramelessWindowHint};
     setWindowFlags(flags);
 
-    mMainWindowUi.setupUi(this);
+    ui.reset(new Ui_MainWindow);
+    ui->setupUi(this);
     setupWidgets();
 
-    //TODO: add global start
 }
 
 void MainWindow::setupWidgets()
 {
-    mWeather.setParent(mMainWindowUi.centralwidget);
+    mWeather.reset(new Weather{ui->mainwidget});
 
-
-    mWeather.start();
+    mWeather->start();
 }

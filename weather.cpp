@@ -9,7 +9,8 @@
 
 Weather::Weather(QWidget *parent) : QWidget(parent)
 {
-    ui.setupUi(this);
+    ui.reset(new Ui_Weather);
+    ui->setupUi(this);
     connect(&mTimer, SIGNAL(timeout()), this, SLOT(update()));
     connect(&mNetworkManager, &QNetworkAccessManager::finished, this, &Weather::updateValues);
     mTimer.setInterval(REFRESH_COOLDOWN * 1000);
@@ -42,7 +43,7 @@ void Weather::updateValues(QNetworkReply *reply)
     }
     mCurrentTemperature++;
     auto text = reply->readAll();
-    ui.currentTemperature->setText(QString::fromUtf8(text));
+    ui->currentTemperature->setText(QString::fromUtf8(text));
 
     updateUI();
 }

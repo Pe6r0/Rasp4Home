@@ -17,7 +17,7 @@ public:
 
 public slots:
     void start();
-    //void stop();
+    //TODO: void stop();
 
 private slots:
     void update();
@@ -31,8 +31,8 @@ private:
 
     void sendRequests();
 
+    std::shared_ptr<Ui_Weather> ui;
     QTimer mTimer;
-    Ui_Weather ui;
     QNetworkAccessManager mNetworkManager;
 
     //celsius
