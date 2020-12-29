@@ -2,10 +2,9 @@
 #define WEATHER_H
 
 #include <QWidget>
-#include <QTimer>
 #include <QUrl>
 
-#include <QNetworkAccessManager>
+#include "restconnector.h"
 
 #include "ui_weather.h"
 
@@ -23,17 +22,12 @@ private slots:
     void update();
 
 private:
-    int REFRESH_COOLDOWN{10};
-    QUrl API_ACCESS{"http://dataservice.accuweather.com/locations/v1/cities/search?apikey=GUHqOXBTc7f4Kdz0AuoD1iGwPdkImWB3&q=London"};
-
     void updateUI();
-    void updateValues(QNetworkReply *reply);
-
-    void sendRequests();
+    void updateValues();
 
     std::shared_ptr<Ui_Weather> ui;
-    QTimer mTimer;
-    QNetworkAccessManager mNetworkManager;
+    RestConnector mCurrentWeather;
+    RestConnector mForecast;
 
     //celsius
     float mCurrentTemperature{0.0f};

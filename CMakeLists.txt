@@ -35,6 +35,8 @@ set(PROJECT_SOURCES
         mainwindow.h
         weather.cpp
         weather.h
+        restconnector.cpp
+        restconnector.h
 )
 
 set ( UIS main.ui weather.ui)
