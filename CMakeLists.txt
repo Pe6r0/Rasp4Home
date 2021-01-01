@@ -37,9 +37,15 @@ set(PROJECT_SOURCES
         weather.h
         restconnector.cpp
         restconnector.h
+        qrcodeservice.cpp
+        qrcodeservice.h
+        wiki.cpp
+        wiki.h
+        utils.cpp
+        utils.h
 )
 
-set ( UIS main.ui weather.ui)
+set ( UIS main.ui weather.ui wiki.ui)
 
 QT_WRAP_UI( PROJECT_SOURCES ${UIS} )
 

@@ -8,15 +8,13 @@
 #include <QUrl>
 #include <QNetworkAccessManager>
 
-#include <QJsonObject>
-
 //reponsible for refreshing content
 class RestConnector : public QObject
 {
     Q_OBJECT
 public:
-    RestConnector(QUrl API, int refreshSeconds = -1);
-    QJsonObject getJsonObj() const;
+    explicit RestConnector(QUrl API, int refreshSeconds = -1);
+    const QByteArray &getReply() const;
 
 signals:
     void updated();
@@ -32,7 +30,7 @@ private:
     QUrl mUrl;
     QTimer mRefreshTimer;
     QNetworkAccessManager mNetworkMngr;
-    QJsonObject mJObject; //include array etc
+    QByteArray mReply;
 };
 
 #endif // RESTCONNECTOR_H

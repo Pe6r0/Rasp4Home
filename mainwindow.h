@@ -5,7 +5,13 @@
 #include <QMainWindow>
 
 #include "weather.h"
+#include "wiki.h"
+
+#include <QColor>
+
 #include "ui_main.h"
+
+
 
 class MainWindow : public QMainWindow
 {
@@ -20,5 +26,6 @@ private:
 
     std::unique_ptr<Ui_MainWindow> ui;
     std::unique_ptr<Weather> mWeather;
+    std::unique_ptr<Wiki> mWiki;
 };
 #endif // MAINWINDOW_H

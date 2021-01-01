@@ -1,9 +1,7 @@
 #include <QNetworkReply>
 #include <QNetworkRequest>
 #include <QString>
-
-#include <QJsonArray>
-#include <QJsonDocument>
+#include <QByteArray>
 
 #include <iostream>
 #include <vector>
@@ -15,23 +13,25 @@ RestConnector::RestConnector(QUrl API, int refreshSeconds)
 {
     connect(&mNetworkMngr, &QNetworkAccessManager::finished, this,
         &RestConnector::updateValues);
-    connect(&mRefreshTimer, &QTimer::timeout, this, &RestConnector::query);
     if (refreshSeconds != -1) {
         mRefreshTimer.setInterval(refreshSeconds * 1000);
+        connect(&mRefreshTimer, &QTimer::timeout, this, &RestConnector::query);
     } else {
+        mRefreshTimer.setInterval(10);
         mRefreshTimer.setSingleShot(true);
-        mRefreshTimer.setInterval(0);
     }
 }
 
-QJsonObject RestConnector::getJsonObj() const
+const QByteArray &RestConnector::getReply() const
 {
-    return mJObject;
+    return mReply;
 }
 
 void RestConnector::start()
 {
-    mRefreshTimer.start();
+    if(!mRefreshTimer.isSingleShot()){
+        mRefreshTimer.start();
+    }
     query();
 }
 
@@ -47,31 +47,11 @@ void RestConnector::updateValues(QNetworkReply* reply)
         return;
     }
     if (reply->error() != QNetworkReply::NoError) {
-        std::cout << "[RestConnector::updateValues]: Network Reply Error: " << reply->error();
+        std::cout << "[RestConnector::updateValues]: Network Reply Error: " << reply->error() << std::endl;
         return;
     }
-    auto text = reply->readAll();
-    std::cout << "[RestConnector::updateValues]: Network Reply: " << QString::fromUtf8(text).toStdString() << std::endl;
-
-    auto doc = QJsonDocument::fromJson(text);
-
-    if (doc.isEmpty()) {
-        std::cout << "[RestConnector::updateValues]: Json Document is empty." << std::endl;
-        return;
-    }
-    if (doc.isNull()) {
-        std::cout << "[RestConnector::updateValues]: Json Document is null." << std::endl;
-        return;
-    }
-
-    if (doc.isArray()) {
-        //TODO
-    }
-
-    if (doc.isObject()) {
-        mJObject = doc.object();
-        //TODO reset array
-    }
+    mReply = reply->readAll();
+    std::cout << "[RestConnector::updateValues]: Network Reply: " << QString::fromUtf8(mReply).toStdString() << std::endl;
     emit updated();
 }
 

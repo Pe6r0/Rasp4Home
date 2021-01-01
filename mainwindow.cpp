@@ -1,5 +1,7 @@
 #include <QWidget>
 
+#include "utils.h"
+
 #include "mainwindow.h"
 
 MainWindow::MainWindow(QWidget *parent)
@@ -10,13 +12,16 @@ MainWindow::MainWindow(QWidget *parent)
 
     ui.reset(new Ui_MainWindow);
     ui->setupUi(this);
+
     setupWidgets();
 
 }
 
 void MainWindow::setupWidgets()
 {
-    mWeather.reset(new Weather{ui->mainwidget});
+    //mWeather.reset(new Weather{ui->frame});
+    mWiki.reset(new Wiki{ui->frame});
 
-    mWeather->start();
+    //mWeather->start();
+    mWiki->start();
 }
