@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-project(Rasp4Home LANGUAGES CXX)
+project(Rasp4Home VERSION 0.1 LANGUAGES CXX)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
@@ -8,26 +8,14 @@ set(CMAKE_AUTOUIC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTORCC ON)
 
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-# QtCreator supports the following variables for Android, which are identical to qmake Android variables.
-# Check https://doc.qt.io/qt/deployment-android.html for more information.
-# They need to be set before the find_package( ...) calls below.
+set(CMAKE_PREFIX_PATH "C:\\Programs\\Qt\\5.15.2\\winrt_x64_msvc2019")
+set(Qt5_DIR "C:\\Programs\\Qt\\5.15.2\\winrt_x86_msvc2019\\lib\\cmake\\Qt5")
 
-#if(ANDROID)
-#    set(ANDROID_PACKAGE_SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/android")
-#    if (ANDROID_ABI STREQUAL "armeabi-v7a")
-#        set(ANDROID_EXTRA_LIBS
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libcrypto.so
-#            ${CMAKE_CURRENT_SOURCE_DIR}/path/to/libssl.so)
-#    endif()
-#endif()
-
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Network REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core5Compat REQUIRED)
+find_package(Qt5 COMPONENTS Widgets REQUIRED)
+find_package(Qt5 COMPONENTS Network REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
@@ -47,25 +35,12 @@ set(PROJECT_SOURCES
 
 set ( UIS main.ui weather.ui wiki.ui)
 
+set_target_properties(Qt5::Core PROPERTIES MAP_IMPORTED_CONFIG_COVERAGE "RELEASE")
+
 QT_WRAP_UI( PROJECT_SOURCES ${UIS} )
 
-if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
-    qt_add_executable(Rasp4Home
-        ${PROJECT_SOURCES}
-    )
-else()
-    if(ANDROID)
-        add_library(Rasp4Home SHARED
-            ${PROJECT_SOURCES}
-        )
-    else()
-        add_executable(Rasp4Home
-            ${PROJECT_SOURCES}
-        )
-    endif()
-endif()
+add_executable(Rasp4Home ${PROJECT_SOURCES})
 
-target_link_libraries(Rasp4Home PRIVATE Qt${QT_VERSION_MAJOR}::Widgets)
-target_link_libraries(Rasp4Home PRIVATE Qt6::Network)
-target_link_libraries(Rasp4Home PRIVATE Qt6::Core5Compat)
+target_link_libraries(Rasp4Home PRIVATE Qt5::Widgets)
+target_link_libraries(Rasp4Home PRIVATE Qt5::Network)
 

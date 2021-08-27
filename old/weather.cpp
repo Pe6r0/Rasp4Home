@@ -82,7 +82,7 @@ void Weather::updateCurrent()
             "Link": "http://www.accuweather.com/en/gb/london/ec4a-2/current-weather/328328?lang=en-us"
           }
         ]*/
-        auto time = obj.find("EpochTime").value().toInteger();
+        auto time = obj.find("EpochTime").value().toInt();
         auto raining = obj.find("HasPrecipication").value().toBool();
         auto link = obj.find("Link").value().toString();
         auto precipitationType = obj.find("PrecipitationType").value().toString();

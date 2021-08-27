@@ -22,7 +22,7 @@ QRCodeService::QRCodeService(QLabel* out, QString data, QColor color, QColor bac
         throw std::out_of_range("QRCodeService, null QLabel.");
     }
     mLabel.reset(out);
-    auto img = out->pixmap();
+    auto img = *(out->pixmap());
     if (img.isNull()) {
         throw std::out_of_range("QRCodeService, null image. Fill with empty content.");
     }
@@ -53,7 +53,7 @@ QRCodeService::QRCodeService(QLabel* out, QString data, QColor color, QColor bac
 
 void QRCodeService::update()
 {
-    QPixmap pix { mLabel->pixmap() };
+    QPixmap pix { *mLabel->pixmap() };
     pix.loadFromData(mConnector->getReply(), "PNG");
     mLabel->setPixmap(pix);
 }
