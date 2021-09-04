@@ -12,8 +12,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Widgets Network REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Widgets Network REQUIRED)
 
 FetchContent_Declare(json
     GIT_REPOSITORY https://github.com/ArthurSonzogni/nlohmann_json_cmake_fetchcontent
@@ -35,6 +35,12 @@ set(PROJECT_SOURCES
         inputparser.cpp
         inputparser.h
         config.json
+        datamanager.cpp
+        datamanager.h
+        weatherdatamanager.cpp
+        weatherdatamanager.h
+        weatherdata.cpp
+        weatherdata.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
@@ -60,7 +66,7 @@ else()
     endif()
 endif()
 
-target_link_libraries(rasp4home PRIVATE Qt${QT_VERSION_MAJOR}::Widgets nlohmann_json::nlohmann_json)
+target_link_libraries(rasp4home PRIVATE Qt${QT_VERSION_MAJOR}::Widgets Qt${QT_VERSION_MAJOR}::Network nlohmann_json::nlohmann_json)
 
 set_target_properties(rasp4home PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

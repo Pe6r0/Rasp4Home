@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     try
     {
         QApplication a(argc, argv);
-        rasp4Home::InputParser inputParser(CONFIG);
+        rasp4home::InputParser inputParser(CONFIG);
         MainWindow w;
         w.resize(inputParser.get<int>("ScreenSize_x"), inputParser.get<int>("ScreenSize_y"));
         if(QGuiApplication::primaryScreen()->availableSize() != w.size()){

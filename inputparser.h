@@ -4,7 +4,7 @@
 
 #include <nlohmann/json.hpp>
 
-namespace rasp4Home
+namespace rasp4home
 {
 //class parses expected input and makes information in it available
 class InputParser
