@@ -1,4 +1,6 @@
 {
+  "ScreenSize_x" : 800,
+  "ScreenSize_y" : 480,
   "Accu_API": "GUHqOXBTc7f4Kdz0AuoD1iGwPdkImWB3",
   "Accu_Location": "London"
 }

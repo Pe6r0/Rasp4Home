@@ -11,7 +11,8 @@ class InputParser
 {
 public:
     InputParser(std::string path);
-    template<class T>
+
+    template<typename T>
     T get(std::string request);
 private:
     nlohmann::json database;
