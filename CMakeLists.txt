@@ -41,6 +41,10 @@ set(PROJECT_SOURCES
         weatherdatamanager.h
         weatherdata.cpp
         weatherdata.h
+        motivationalquote.cpp
+        motivationalquote.h
+        motivationalquotemanager.cpp
+        motivationalquotemanager.h
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

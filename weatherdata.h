@@ -34,7 +34,7 @@ public:
         int UVIndex;
         float visibility;       //km
         float cloudCover;       //%
-        float precipitation;      //mm, past hour
+        float precipitation;    //mm, past hour
 
         std::string toString();
     };
@@ -53,7 +53,7 @@ public:
         std::string toString();
     };
 
-    WeatherData();
+    WeatherData(){};
     void setCurrentWeatherData(CurrentWeatherData data);
     void setWeatherForecast(std::vector<WeatherForecast> forecast);
     CurrentWeatherData getCurrentWeatherData();

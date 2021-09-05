@@ -5,6 +5,7 @@
 #include <QTimer>
 
 #include "weatherdatamanager.h"
+#include "motivationalquotemanager.h"
 
 namespace rasp4home
 {
@@ -18,11 +19,16 @@ public:
 
 public slots:
         void updateWeatherData();
+        void updateQuote();
 signals:
 
 private:
-    rasp4home::data::WeatherDataManager mWeatherDataManager;
+    WeatherDataManager mWeatherDataManager;
     QTimer mWeatherDataRefreshTimer;
+
+    MotivationalQuoteManager mMotivationalQuoteManager;
+    QTimer mQuoteRefreshTimer;
+
 };
 }
 }

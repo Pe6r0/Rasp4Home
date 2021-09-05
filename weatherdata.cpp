@@ -3,10 +3,6 @@
 
 #include "weatherdata.h"
 
-rasp4home::data::WeatherData::WeatherData()
-{
-}
-
 void rasp4home::data::WeatherData::setCurrentWeatherData(rasp4home::data::WeatherData::CurrentWeatherData data)
 {
     mCurrentWeatherData = data;
