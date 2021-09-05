@@ -5,6 +5,8 @@
 
 namespace rasp4home
 {
+namespace data
+{
 class DataManager : public QObject
 {
     Q_OBJECT
@@ -14,5 +16,6 @@ public:
 signals:
 
 };
+}
 }
 #endif // DATAMANAGER_H

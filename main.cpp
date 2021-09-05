@@ -4,8 +4,11 @@
 #include <QScreen>
 
 #include "inputparser.h"
-
+#include "datamanager.h"
 #include "mainwindow.h"
+
+
+#include "weatherdatamanager.h"
 
 namespace
 {
@@ -18,12 +21,26 @@ int main(int argc, char *argv[])
     {
         QApplication a(argc, argv);
         rasp4home::InputParser inputParser(CONFIG);
-        MainWindow w;
-        w.resize(inputParser.get<int>("ScreenSize_x"), inputParser.get<int>("ScreenSize_y"));
-        if(QGuiApplication::primaryScreen()->availableSize() != w.size()){
-            w.show();
+
+        rasp4home::data::DataManager mainDataManager;
+
+
+
+        ////tmp
+        /// add the args in a struct maybe?
+        rasp4home::data::WeatherDataManager weatherDataManager(inputParser.get<std::string>("Accu_API"), inputParser.get<std::string>("Accu_Location"));
+
+        weatherDataManager.refreshAllData();
+        ///
+
+
+
+        rasp4home::ui::MainWindow mainUI;
+        mainUI.resize(inputParser.get<int>("ScreenSize_x"), inputParser.get<int>("ScreenSize_y"));
+        if(QGuiApplication::primaryScreen()->availableSize() != mainUI.size()){
+            mainUI.show();
         }else{
-            w.showFullScreen();
+            mainUI.showFullScreen();
         }
 
         return a.exec();

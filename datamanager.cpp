@@ -1,6 +1,6 @@
  #include "datamanager.h"
 
-rasp4home::DataManager::DataManager(QObject *parent) : QObject(parent)
+rasp4home::data::DataManager::DataManager(QObject *parent) : QObject(parent)
 {
 
 }

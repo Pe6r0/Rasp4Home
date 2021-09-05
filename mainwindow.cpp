@@ -1,11 +1,11 @@
 #include "mainwindow.h"
 
-MainWindow::MainWindow(QWidget *parent)
+rasp4home::ui::MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {
 }
 
-MainWindow::~MainWindow()
+rasp4home::ui::MainWindow::~MainWindow()
 {
 }
 
