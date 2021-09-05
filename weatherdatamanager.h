@@ -15,14 +15,23 @@ class WeatherDataManager : public QObject
 {
     Q_OBJECT
 public:
-    WeatherDataManager(std::string APIKey, std::string location, QObject *parent = nullptr);
-    bool refreshAllData();
 
-public slots:
-    void readCurrentConditions(QByteArray data);
+    struct WeatherDataManagerInput
+    {
+        std::string APIKey;
+        std::string location;
+    };
+
+    WeatherDataManager(WeatherDataManagerInput input, QObject *parent = nullptr);
+    void refreshAllData();
+    void refreshCurrentWeather();
+    void refreshWeatherDailyForecast();
 
 private:
+    void readCurrentConditions(QByteArray data);
+    void readForecast(QByteArray data);
     QUrl buildCurrentConditionsRequest();
+    QUrl build12HourForecastRequest();
 
     QNetworkAccessManager mNetworkManager;
     WeatherData mWeatherData;

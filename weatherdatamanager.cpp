@@ -13,12 +13,13 @@
 namespace
 {
 const auto resourceURLCurrentConditionsBase{"http://dataservice.accuweather.com/currentconditions/v1/"};
-const auto resourceURL1DayForecastBase{"http://dataservice.accuweather.com/forecasts/v1/daily/1day/"};
+const auto resourceURL1DayForecastBase{"http://dataservice.accuweather.com/forecasts/v1/hourly/12hour/"};
 
 //queries
 const auto apikey = "apikey";
 const auto details = "details";
-const auto detailedRequest = "true";
+const auto detailedRequestCurrent = "true";
+const auto detailedRequestForecast = "false";
 const auto metric = "metric";
 const auto metricRequest = "true";
 }
@@ -28,18 +29,33 @@ QUrl rasp4home::data::WeatherDataManager::buildCurrentConditionsRequest()
     QUrl request{(resourceURLCurrentConditionsBase + mLocationCode).c_str()};
     QUrlQuery query;
     query.addQueryItem(apikey, mAPIKey.c_str());
-    query.addQueryItem(details, detailedRequest);
+    query.addQueryItem(details, detailedRequestCurrent);
     query.addQueryItem(apikey, metricRequest);
     request.setQuery(query);
     return request;
 }
 
-rasp4home::data::WeatherDataManager::WeatherDataManager(std::string apikey, std::string location, QObject *parent) : QObject(parent), mAPIKey{apikey}, mLocationCode{location}, mNetworkManager(this)
+QUrl rasp4home::data::WeatherDataManager::build12HourForecastRequest()
 {
-
+    QUrl request{(resourceURL1DayForecastBase + mLocationCode).c_str()};
+    QUrlQuery query;
+    query.addQueryItem(apikey, mAPIKey.c_str());
+    query.addQueryItem(details, detailedRequestForecast);
+    query.addQueryItem(apikey, metricRequest);
+    request.setQuery(query);
+    return request;
 }
 
-bool rasp4home::data::WeatherDataManager::refreshAllData()
+rasp4home::data::WeatherDataManager::WeatherDataManager(WeatherDataManagerInput input, QObject *parent) : QObject(parent), mAPIKey{input.APIKey}, mLocationCode{input.location}, mNetworkManager(this)
+{}
+
+void rasp4home::data::WeatherDataManager::refreshAllData()
+{
+    refreshCurrentWeather();
+    refreshWeatherDailyForecast();
+}
+
+void rasp4home::data::WeatherDataManager::refreshCurrentWeather()
 {
     QNetworkRequest currentConditionsRequest{buildCurrentConditionsRequest()};
     QNetworkReply *currentConditionsReply = mNetworkManager.get(currentConditionsRequest);
@@ -50,12 +66,26 @@ bool rasp4home::data::WeatherDataManager::refreshAllData()
         }
         else
         {
-            std::cout << "[refreshAllData] Problem reading current weather conditions." << std::endl; //TODO: error code add. make this into a function
+            std::cout << "[refreshAllData] Problem reading current weather conditions. (" << currentConditionsReply->error()  << ")"<< std::endl;
         };
     });
-    return true;
 }
 
+void rasp4home::data::WeatherDataManager::refreshWeatherDailyForecast()
+{
+    QNetworkRequest forecastRequest{build12HourForecastRequest()};
+    QNetworkReply *forecastReply = mNetworkManager.get(forecastRequest);
+    connect(forecastReply, &QNetworkReply::finished, this, [=]() {
+        if(forecastReply->error() == QNetworkReply::NoError)
+        {
+            readForecast(forecastReply->readAll());
+        }
+        else
+        {
+            std::cout << "[refreshAllData] Problem reading weather forecast. (" << forecastReply->error()  << ")" << std::endl;
+        };
+    });
+}
 
 void rasp4home::data::WeatherDataManager::readCurrentConditions(QByteArray response)
 {
@@ -67,15 +97,11 @@ void rasp4home::data::WeatherDataManager::readCurrentConditions(QByteArray respo
     {
         int time = requestJsonParsed[0].at("EpochTime");
         newData.timestamp.setTime_t(time);
-        std::cout << newData.timestamp.toString().toStdString() << std::endl;
         newData.location = "london";
         newData.summary = requestJsonParsed[0].at("WeatherText");
         newData.raining = requestJsonParsed[0].at("HasPrecipitation");
         newData.daytime = requestJsonParsed[0].at("IsDayTime");
         newData.temperature = requestJsonParsed[0].at("Temperature").at("Metric").at("Value");
-
-        std::cout << newData.temperature << std::endl;
-
         newData.humidity = requestJsonParsed[0].at("RelativeHumidity");
         newData.windDirection = requestJsonParsed[0].at("Wind").at("Direction").at("Degrees");
         newData.windSpeed = requestJsonParsed[0].at("Wind").at("Speed").at("Metric").at("Value");
@@ -88,6 +114,37 @@ void rasp4home::data::WeatherDataManager::readCurrentConditions(QByteArray respo
         mWeatherData.setCurrentWeatherData(newData);
     }  catch (std::exception &e) {
         std::cout << "[readCurrentConditions]: Problem parsing data. " << e.what() << std::endl;
+    }
+
+}
+
+void rasp4home::data::WeatherDataManager::readForecast(QByteArray response)
+{
+    std::cout << "[readForecast] received: " << response.toStdString() << std::endl;
+    nlohmann::json requestJsonParsed = nlohmann::json::parse(response.toStdString());
+    try
+    {
+        std::vector<rasp4home::data::WeatherData::WeatherForecast> forecast;
+
+        QDateTime currentDate = QDateTime::currentDateTime();
+        for(int i=0; i <= 11; ++i)
+        {
+            rasp4home::data::WeatherData::WeatherForecast forecastUnit;
+            forecastUnit.timestamp = currentDate;
+            int time = requestJsonParsed[i].at("EpochDateTime");
+            forecastUnit.predictedTime.setTime_t(time);
+            forecastUnit.location = "london";
+            forecastUnit.summary = requestJsonParsed[i].at("IconPhrase");
+            forecastUnit.raining = requestJsonParsed[i].at("HasPrecipitation");
+            forecastUnit.daytime = requestJsonParsed[i].at("IsDaylight");
+            forecastUnit.temperature = requestJsonParsed[i].at("Temperature").at("Value");
+            forecastUnit.precipitationProbability = requestJsonParsed[i].at("PrecipitationProbability");
+            forecast.emplace_back(forecastUnit);
+        }
+        mWeatherData.setWeatherForecast(forecast);
+
+    }  catch (std::exception &e) {
+        std::cout << "[readForecast]: Problem parsing data. " << e.what() << std::endl;
     }
 
 }

@@ -22,18 +22,7 @@ int main(int argc, char *argv[])
         QApplication a(argc, argv);
         rasp4home::InputParser inputParser(CONFIG);
 
-        rasp4home::data::DataManager mainDataManager;
-
-
-
-        ////tmp
-        /// add the args in a struct maybe?
-        rasp4home::data::WeatherDataManager weatherDataManager(inputParser.get<std::string>("Accu_API"), inputParser.get<std::string>("Accu_Location"));
-
-        weatherDataManager.refreshAllData();
-        ///
-
-
+        rasp4home::data::DataManager mainDataManager({inputParser.get<std::string>("Accu_API"), inputParser.get<std::string>("Accu_Location")});
 
         rasp4home::ui::MainWindow mainUI;
         mainUI.resize(inputParser.get<int>("ScreenSize_x"), inputParser.get<int>("ScreenSize_y"));

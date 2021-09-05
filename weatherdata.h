@@ -1,5 +1,6 @@
 #ifndef WEATHERDATA_H
 #define WEATHERDATA_H
+#include <vector>
 #include <QDateTime>
 
 namespace rasp4home
@@ -33,16 +34,33 @@ public:
         int UVIndex;
         float visibility;       //km
         float cloudCover;       //%
-        int precipitation;      //mm, past hour
+        float precipitation;      //mm, past hour
+
+        std::string toString();
+    };
+
+    struct WeatherForecast
+    {
+        QDateTime timestamp;
+        QDateTime predictedTime;
+        std::string location;
+        std::string summary;
+        bool raining;
+        bool daytime;
+        float temperature;              //celsius
+        float precipitationProbability; //%
+
+        std::string toString();
     };
 
     WeatherData();
     void setCurrentWeatherData(CurrentWeatherData data);
+    void setWeatherForecast(std::vector<WeatherForecast> forecast);
     CurrentWeatherData getCurrentWeatherData();
-    std::string toString();
 
 private:
     CurrentWeatherData mCurrentWeatherData; //TODO add storage
+    std::vector<WeatherForecast> mForecast;
 };
 }
 }
