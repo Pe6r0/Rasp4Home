@@ -45,6 +45,7 @@ set(PROJECT_SOURCES
         motivationalquote.h
         motivationalquotemanager.cpp
         motivationalquotemanager.h
+        timedisplay.h timedisplay.cpp
 )
 
 if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)

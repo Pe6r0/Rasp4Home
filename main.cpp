@@ -22,14 +22,17 @@ int main(int argc, char *argv[])
         QApplication a(argc, argv);
         rasp4home::InputParser inputParser(CONFIG);
 
-        rasp4home::data::DataManager mainDataManager({inputParser.get<std::string>("Accu_API"), inputParser.get<std::string>("Accu_Location")});
 
-        rasp4home::ui::MainWindow mainUI;
-        mainUI.resize(inputParser.get<int>("ScreenSize_x"), inputParser.get<int>("ScreenSize_y"));
-        if(QGuiApplication::primaryScreen()->availableSize() != mainUI.size()){
-            mainUI.show();
+
+        rasp4home::ui::MainWindow mainWindow;
+
+        rasp4home::data::DataManager mainDataManager({inputParser.get<std::string>("Accu_API"), inputParser.get<std::string>("Accu_Location")}, mainWindow.getUI());
+
+        mainWindow.resize(inputParser.get<int>("ScreenSize_x"), inputParser.get<int>("ScreenSize_y"));
+        if(QGuiApplication::primaryScreen()->availableSize() != mainWindow.size()){
+            mainWindow.show();
         }else{
-            mainUI.showFullScreen();
+            mainWindow.showFullScreen();
         }
 
         return a.exec();

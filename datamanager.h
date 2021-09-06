@@ -3,7 +3,9 @@
 
 #include <QObject>
 #include <QTimer>
+#include <QPointer>
 
+#include "mainwindow.h"
 #include "weatherdatamanager.h"
 #include "motivationalquotemanager.h"
 
@@ -15,11 +17,12 @@ class DataManager : public QObject
 {
     Q_OBJECT
 public:
-    explicit DataManager(WeatherDataManager::WeatherDataManagerInput input, QObject *parent = nullptr);
+    explicit DataManager(WeatherDataManager::WeatherDataManagerInput input, ui::MainScreen *uiPtr, QObject *parent = nullptr);
 
 public slots:
         void updateWeatherData();
         void updateQuote();
+        void updateClock();
 signals:
 
 private:
@@ -28,6 +31,9 @@ private:
 
     MotivationalQuoteManager mMotivationalQuoteManager;
     QTimer mQuoteRefreshTimer;
+    QTimer mClock;
+
+    QPointer<ui::MainScreen> mUi;
 
 };
 }
